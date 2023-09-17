@@ -33,9 +33,9 @@ else
     echo "Server configuration file already exists."
 fi
 
-sudo chmod +x auto_cron.sh
-sudo chmod +x client.sh
-sudo chmod +x datetime.sh
+sudo chmod +x /home/wireguard/auto_cron.sh
+sudo chmod +x /home/wireguard/client.sh
+sudo chmod +x /home/wireguard/datetime.sh
 
 # Включение и запуск службы WireGuard
 sudo systemctl enable wg-quick@wg0
