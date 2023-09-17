@@ -3,12 +3,12 @@
 CLIENT_NAME="$1"
 LIFETIME_MONTHS="$2"
 
-# Ãåíåðàöèÿ êëþ÷åé
+# ÃƒÃ¥Ã­Ã¥Ã°Ã Ã¶Ã¨Ã¿ ÃªÃ«Ã¾Ã·Ã¥Ã©
 wg genkey | tee /etc/wireguard/${CLIENT_NAME}_private.key | wg pubkey > /etc/wireguard/${CLIENT_NAME}_public.key
 
-# Íàçíà÷åíèå IP
+# ÃÃ Ã§Ã­Ã Ã·Ã¥Ã­Ã¨Ã¥ IP
 if [[ ! -f /home/wireguard/assigned_ips.txt ]]; then
-    # Åñëè ôàéëà íåò, íà÷íåì ñ 10.0.0.2
+    # Ã…Ã±Ã«Ã¨ Ã´Ã Ã©Ã«Ã  Ã­Ã¥Ã², Ã­Ã Ã·Ã­Ã¥Ã¬ Ã± 10.0.0.2
     NEXT_IP="10.0.0.2"
 else
     LAST_IP=$(tail -1 /home/wireguard/assigned_ips.txt)
@@ -20,12 +20,12 @@ else
 fi
 echo $NEXT_IP >> /home/wireguard/assigned_ips.txt
 
-# Äîáàâëåíèå êëèåíòà â êîíôèãóðàöèþ ñåðâåðà
+# Ã„Ã®Ã¡Ã Ã¢Ã«Ã¥Ã­Ã¨Ã¥ ÃªÃ«Ã¨Ã¥Ã­Ã²Ã  Ã¢ ÃªÃ®Ã­Ã´Ã¨Ã£Ã³Ã°Ã Ã¶Ã¨Ã¾ Ã±Ã¥Ã°Ã¢Ã¥Ã°Ã 
 echo "[Peer]" >> /etc/wireguard/wg0.conf
 echo "PublicKey = $(cat /etc/wireguard/${CLIENT_NAME}_public.key)" >> /etc/wireguard/wg0.conf
 echo "AllowedIPs = ${NEXT_IP}/32" >> /etc/wireguard/wg0.conf
 
-# Çàïèñü äàòû èñòå÷åíèÿ ñðîêà äåéñòâèÿ
+# Ã‡Ã Ã¯Ã¨Ã±Ã¼ Ã¤Ã Ã²Ã» Ã¨Ã±Ã²Ã¥Ã·Ã¥Ã­Ã¨Ã¿ Ã±Ã°Ã®ÃªÃ  Ã¤Ã¥Ã©Ã±Ã²Ã¢Ã¨Ã¿
 EXPIRY_DATE=$(date -d "+${LIFETIME_MONTHS} month" "+%Y-%m-%d")
 echo "${CLIENT_NAME},${EXPIRY_DATE},${NEXT_IP}" >> /home/wireguard/client_expiry.txt
 
@@ -36,6 +36,7 @@ EXTERNAL_IP=$(curl -s ifconfig.me)
 echo "[Interface]" > /home/wireguard/${CLIENT_NAME}.conf
 echo "PrivateKey = ${CLIENT_PRIVATE_KEY}" >> /home/wireguard/${CLIENT_NAME}.conf
 echo "Address = ${NEXT_IP}/32" >> /home/wireguard/${CLIENT_NAME}.conf
+echo "DNS = 1.1.1.1" >> /home/wireguard/${CLIENT_NAME}.conf
 echo "" >> /home/wireguard/${CLIENT_NAME}.conf
 echo "[Peer]" >> /home/wireguard/${CLIENT_NAME}.conf
 echo "PublicKey = ${SERVER_PUBLIC_KEY}" >> /home/wireguard/${CLIENT_NAME}.conf
