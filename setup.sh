@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Обновление пакетов и установка wireguard и curl
+# РћР±РЅРѕРІР»РµРЅРёРµ РїР°РєРµС‚РѕРІ Рё СѓСЃС‚Р°РЅРѕРІРєР° wireguard Рё curl
 sudo apt update && sudo apt install -y wireguard curl
 
-# Генерация ключей сервера
+# Р“РµРЅРµСЂР°С†РёСЏ РєР»СЋС‡РµР№ СЃРµСЂРІРµСЂР°
 wg genkey | sudo tee /etc/wireguard/server_private.key | wg pubkey | sudo tee /etc/wireguard/server_public.key
 
-# Проверка и генерация ключей сервера (если они ещё не созданы)
+# РџСЂРѕРІРµСЂРєР° Рё РіРµРЅРµСЂР°С†РёСЏ РєР»СЋС‡РµР№ СЃРµСЂРІРµСЂР° (РµСЃР»Рё РѕРЅРё РµС‰С‘ РЅРµ СЃРѕР·РґР°РЅС‹)
 if [[ ! -f /etc/wireguard/server_private.key || ! -f /etc/wireguard/server_public.key ]]; then
     wg genkey | sudo tee /etc/wireguard/server_private.key | wg pubkey | sudo tee /etc/wireguard/server_public.key
     echo "Server keys generated."
@@ -14,10 +14,10 @@ else
     echo "Server keys already exist."
 fi
 
-# Загрузите приватный ключ сервера
+# Р—Р°РіСЂСѓР·РёС‚Рµ РїСЂРёРІР°С‚РЅС‹Р№ РєР»СЋС‡ СЃРµСЂРІРµСЂР°
 SERVER_PRIVATE_KEY=$(cat /etc/wireguard/server_private.key)
 
-# Создание конфигурационного файла сервера (если он ещё не существует)
+# РЎРѕР·РґР°РЅРёРµ РєРѕРЅС„РёРіСѓСЂР°С†РёРѕРЅРЅРѕРіРѕ С„Р°Р№Р»Р° СЃРµСЂРІРµСЂР° (РµСЃР»Рё РѕРЅ РµС‰С‘ РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚)
 if [[ ! -f /etc/wireguard/wg0.conf ]]; then
     cat <<EOL | sudo tee /etc/wireguard/wg0.conf
 [Interface]
@@ -33,7 +33,11 @@ else
     echo "Server configuration file already exists."
 fi
 
-# Включение и запуск службы WireGuard
+sudo chmod +x auto_cron.sh
+sudo chmod +x client.sh
+sudo chmod +x datetime.sh
+
+# Р’РєР»СЋС‡РµРЅРёРµ Рё Р·Р°РїСѓСЃРє СЃР»СѓР¶Р±С‹ WireGuard
 sudo systemctl enable wg-quick@wg0
 sudo systemctl start wg-quick@wg0
 
