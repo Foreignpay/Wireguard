@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Проверка на наличие задачи в crontab
-CRON_JOB="0 2 * * * /home/wireguard/clients_date.sh"
-if ! (crontab -l | grep -q "clients_date.sh"); then
+# РџСЂРѕРІРµСЂРєР° РЅР° РЅР°Р»РёС‡РёРµ Р·Р°РґР°С‡Рё РІ crontab
+CRON_JOB="0 2 * * * /home/wireguard/datetime.sh"
+if ! (crontab -l | grep -q "datetime.sh"); then
     (crontab -l ; echo "$CRON_JOB") | crontab -
     echo "Cron job added successfully."
 else
